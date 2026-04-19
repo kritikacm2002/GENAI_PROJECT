@@ -1,0 +1,22 @@
+role,topic,difficulty,description
+ML Engineer,Probability & Stats,1,"Basic distributions, p-values, and Bayes theorem."
+ML Engineer,Classical ML,2,"Optimization, Overfitting, and Ensemble methods like Random Forest/XGBoost."
+ML Engineer,Deep Learning,3,"Transformer architectures, backpropagation math, and LLM fine-tuning."
+Software Engineer,Data Structures,1,"Arrays, Linked Lists, and Hash Map complexities."
+Software Engineer,System Design,2,"Load balancing, Caching strategies, and Database sharding."
+Software Engineer,Distributed Systems,3,Consensus algorithms (Raft/Paxos) and CAP Theorem tradeoffs.
+Data Scientist,Exploratory Data Analysis,1,Handling missing values and statistical visualization.
+Data Scientist,Predictive Modeling,2,Feature engineering and cross-validation techniques.
+Data Scientist,Causal Inference,3,"A/B testing math, multi-armed bandits, and bias correction."
+Cybersecurity,Network Security,1,"OSI Model, Firewalls, and SSL/TLS basics."
+Cybersecurity,Penetration Testing,2,"SQL Injection, XSS, and exploit mitigation."
+Cybersecurity,Cryptography,3,Zero-knowledge proofs and Elliptic Curve Cryptography.
+Data Engineer,SQL & Databases,1,"Joins, Indexing, and Normalization."
+Data Engineer,Data Pipelines,2,"ETL vs ELT, Spark optimization, and Airflow orchestration."
+Data Engineer,Big Data Architecture,3,Data Lakes vs Warehouses and Kappa/Lambda architectures.
+DevOps Engineer,Cloud Foundations,1,"Virtualization, IAM roles, and basic Networking."
+DevOps Engineer,CI/CD & Containers,2,"Dockerization, Jenkins pipelines, and GitOps."
+DevOps Engineer,Orchestration,3,"Kubernetes scheduling, Service Mesh (Istio), and Terraform."
+Product Manager,Product Metrics,1,"Retention, Churn, and North Star metrics."
+Product Manager,Prioritization,2,RICE framework and Roadmap trade-offs.
+Product Manager,Market Strategy,3,Network effects and GTM strategies for SaaS/Platforms.
