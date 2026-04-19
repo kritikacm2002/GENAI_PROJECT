@@ -3,7 +3,7 @@ import pandas as pd
 import google.generativeai as genai
 
 # --- 1. API CONFIGURATION ---
-API_KEY = "AIzaSyCxSqTPL9J6nslwN9fKHo5t7US9LzY9VcQ" # Double check your key here
+API_KEY = st.secrets["GEMINI_API_KEY"] # Double check your key here
 try:
     if API_KEY:
         genai.configure(api_key=API_KEY)
