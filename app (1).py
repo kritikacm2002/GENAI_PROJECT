@@ -2,37 +2,39 @@ import streamlit as st
 import pandas as pd
 import google.generativeai as genai
 
-# --- 1. API CONFIGURATION ---
-API_KEY = "" # paste key here
+#NOTE: I have taken help from the internet and AI tools for incorporating emojis in my code for my user inetrface part
+
+# API Configuration
+API_KEY = "" #I have not put my API key here due to the security warnings given by github
 try:
     if API_KEY:
         genai.configure(api_key=API_KEY)
-        # Using the standard Flash model for best performance
+        # I have used Gemini 3.1 flash lite preview for my project
         model = genai.GenerativeModel('models/gemini-3.1-flash-lite-preview')
 except Exception as e:
     st.error(f"Configuration Error: {e}")
 
-# --- 2. INTERVIEW ENGINE ---
+# The main interview engine class
 class DynamicInterview:
     def __init__(self, data_path):
         self.df = pd.read_csv(data_path)
 
     def generate_question(self, role, mastery, blacklist):
-      # 1. Determine Difficulty
+      # determining the difficulty level based on threshold
       diff = 1 if mastery < 0.4 else (3 if mastery > 0.7 else 2)
 
-      # 2. Filter data for the role and difficulty
+      # filtering the data for the required role and difficulty
       pool = self.df[(self.df['role'] == role) & (self.df['difficulty'] == diff)]
 
-      # If the pool is empty for that difficulty, broaden the search to just the role
+      # if the pool for a particular difficulty is empty, then the search is broadened to just the role
       if pool.empty:
           pool = self.df[self.df['role'] == role]
 
-      # 3. Pick a random row from the pool to ensure topic rotation
+      # to ensure that the topics are rotated and not repetitive, we pick a random row from the pool
       topic_info = pool.sample(1).iloc[0]
       selected_topic = topic_info['topic']
 
-      # 4. Get the last 3 questions for context
+      #getting last 3 questions for the context, to ensure the above is satisfied
       avoid_str = ", ".join(blacklist[-3:])
 
       prompt = f"""
@@ -54,11 +56,11 @@ class DynamicInterview:
       response = model.generate_content(prompt)
       return response.text.strip(), selected_topic, diff
 
-# --- 3. UI SETUP & SESSION STATE ---
-st.set_page_config(page_title="Adaptive AI Interviewer", layout="wide",page_icon="🎯")
+#setting up the UI and session state
+st.set_page_config(page_title="Adaptive AI Interviewer", layout="wide",page_icon="🎯") #took help for inserting an emoji
 engine = DynamicInterview('knowledge_map.csv')
 
-# Custom CSS for that "Impactful" look
+# required CSS code for creating an impactful look
 st.markdown("""
     <style>
     .main { background-color: #f5f7f9; }
@@ -67,19 +69,19 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# Initialize Session States
+# initializing the session states, and setting the default session states
 if 'mastery' not in st.session_state: st.session_state.mastery = 0.5
 if 'history' not in st.session_state: st.session_state.history = []
 if 'current_q' not in st.session_state: st.session_state.current_q = None
 if 'eval_result' not in st.session_state: st.session_state.eval_result = None
 if 'used_questions' not in st.session_state: st.session_state.used_questions = []
 
-# Sidebar for Progress
+#I have kept a sidebar which keeps track of the candidate's perfromance, and also has a dropdown for selecting the job role
 with st.sidebar:
     st.title("🎯 Performance Tracker")
     role = st.selectbox("Career Track:", sorted(engine.df['role'].unique()))
 
-    # Reset if role changes
+    # resetting every parameter in case the selected job role is changed by the candidate
     if "last_role" not in st.session_state or st.session_state.last_role != role:
         st.session_state.mastery = 0.5
         st.session_state.history = []
@@ -103,10 +105,10 @@ with st.sidebar:
         for key in list(st.session_state.keys()): del st.session_state[key]
         st.rerun()
 
-# --- 4. MAIN KPI DASHBOARD (Highlighted Weighted Score) ---
+# main KPI dashboard for highlighting the weighted score
 st.title("🚀 AI Adaptive Interviewer")
 
-# Excitement Prompts for Performance Streaks
+# in case teh candidate perfroms really well in a row, I have also incorporated some sort of excitement prompts celebrating his/her perfromance streaks
 last_3_scores = [h['score'] for h in st.session_state.history[-3:]]
 if len(last_3_scores) == 3 and all(s >= 0.8 for s in last_3_scores):
     st.success("🔥 **ELITE STREAK:** Your technical depth is impressive. Moving to highly complex scenarios.")
@@ -124,7 +126,7 @@ with col_c:
 
 st.divider()
 
-# --- 5. SUMMARY VIEW ---
+#for the final consolidated summary of teh candidate's perfromance, after the interview session is ended
 if st.session_state.get('show_summary'):
     st.header("🏁 Consolidated Performance Report")
     with st.spinner("Analyzing overall performance..."):
@@ -137,7 +139,7 @@ if st.session_state.get('show_summary'):
         st.rerun()
     # st.stop()
 
-# --- 6. MAIN INTERVIEW LOOP (Correctly Indented ELSE) ---
+# the main interview loop
 else:
     if st.session_state.get('trigger_next'):
         st.session_state.current_q = None
@@ -156,7 +158,7 @@ else:
                 st.error(f"Generation failed: {e}")
                 st.stop()
 
-    # Interview Interface
+    # the interview interface representing the currently selected focus area, corresponding topic and difficulty level
     q = st.session_state.current_q
     st.info(f"**Focus Area:** {q['topic']} | **Difficulty Level:** {q['diff']}/3")
     st.subheader(q['text'])
@@ -197,7 +199,7 @@ else:
                     except Exception as e:
                         st.error(f"Evaluation Error: {e}")
 
-    # Results Display
+    #displaying the final result as per evaluation of the candidate's performance
     if st.session_state.eval_result:
         st.markdown("### 📊 AI Evaluation")
         st.info(st.session_state.eval_result)
