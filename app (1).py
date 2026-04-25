@@ -1,3 +1,5 @@
+# the code for my project
+
 import streamlit as st
 import pandas as pd
 import google.generativeai as genai
